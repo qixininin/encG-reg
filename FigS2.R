@@ -6,8 +6,8 @@
 ##                DprimetoD()
 ##                GenerateLDGeno()
 
-setwd("~/Desktop/")
-source("source.R")
+setwd("~/Desktop/Cryptography/github/")
+source("encGRMsource.R")
 library(ggplot2)
 library(egg)
 
@@ -30,8 +30,9 @@ for(r in 0:3)
     Gr = GenerateGeno_r(freq, n1, r, FALSE)
     X1 = Gr[[1]]
     X2 = Gr[[2]]
-    X1 = t(apply(X1, 1, scale))
-    X2 = t(apply(X2, 1, scale))
+    X1 = scale(X1)
+    X2 = scale(X2)
+    
     ## GRM calculated from individual genotype
     K12 = tcrossprod(X1, X2) / M
     rst = c(rst, var(diag(K12)))
@@ -39,12 +40,12 @@ for(r in 0:3)
   dt = data.frame(grp = rep(c("Theoretical", "Observed"), each = Mnum),
                   r = r,
                   M = as.factor(rep(Mvec, 2)),
-                  var = c((1-(0.5)^r)/Mvec, rst))
+                  var = c((1+(0.25)^r)/Mvec, rst))
   p[[r+1]] = ggplot(data = dt, aes(x=M, y=var, color=grp, fill=grp))+
     geom_bar(stat="identity", width = 0.6, position=position_dodge(width = 0.8))+
     scale_color_manual(values=color, name="") +
     scale_fill_manual(values=color, name="") +
-    scale_y_continuous(limits = c(0,0.001))+
+    scale_y_continuous(limits = c(0,0.003))+
     labs(title = title,
          y="Var(GRM)")+
     theme_article()+
@@ -89,7 +90,7 @@ for(r in 0:3)
   dt = data.frame(grp = rep(c("Theoretical", "Observed"), each = Mnum),
                   r = r,
                   M = as.factor(rep(Mvec, 2)),
-                  var = c((1-(0.5)^r)/Mvec+(1-(0.5)^r)/Kvec, rst))
+                  var = c((1-(0.25)^r)/Mvec+(1-(0.25)^r)/Kvec, rst))
   q[[r+1]] = ggplot(data = dt, aes(x=M, y=var, color=grp, fill=grp))+
     geom_bar(stat="identity", width = 0.6, position=position_dodge(width = 0.8))+
     scale_color_manual(values=color, name="") +
