@@ -16,4 +16,4 @@ We provide suggested commands for your possible reference, and your environment 
 - Step 1 Within-cohort quality controls
 - Step 2 Determine m and k
 - Step 3 Encrypt genotype matrix
-- Step 4 Perform encGRM across cohorts
+- Step 4 Perform encG-reg across cohorts
