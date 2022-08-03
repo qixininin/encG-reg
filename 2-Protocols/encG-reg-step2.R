@@ -78,7 +78,7 @@ dev.off()
 alpha = 0.05 # type I error
 beta = 0.1           # type II error two tail test
 seta = 0.5*0.9       # 1-degree relatives
-minM = ( ( qnorm(1-beta)*sqrt(1-seta^2) + qnorm(1-alpha/n1/n2) ) / seta )^2
+minM = ( ( qnorm(1-beta)*sqrt(1+seta^2) + qnorm(1-alpha/n1/n2) ) / seta )^2
 M = ceiling(1.2 * minM)
 
 # SNP list
@@ -98,8 +98,8 @@ Me = ceiling(Me)
 write.table(Me, paste0(user1,"-",user2,".me"), quote = F, col.names = F, row.names = F)
 
 # K
-K = 1/(1/minM-1/Me)
-K = ceiling(K) # theoretical needed number of PC
+minK = ceiling(1/(1/(( ( qnorm(1-beta)*sqrt(1-seta^2) + qnorm(1-alpha/(n1*n2)) ) / seta )^2)-1/Me))
+K = ceiling(minK)
 write.table(K, paste0(user1,"-",user2,".k"), quote = F, col.names = F, row.names = F)
 
 # seed
