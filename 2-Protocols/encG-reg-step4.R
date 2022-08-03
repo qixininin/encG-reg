@@ -1,6 +1,6 @@
 # This R file is used to identify 1-degree relatives and identical samples based on .sscore results
 # example input:
-# Rscript encGRM-step4.R ${user1} ${user2} 
+# Rscript encG-reg-step4.R ${user1} ${user2} 
 
 # input parameter
 arg = commandArgs(T)
