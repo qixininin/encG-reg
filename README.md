@@ -2,10 +2,10 @@
 
 ## 1-Simulations
 This github contains simulation codes of GRM, encGRM and encG-reg.
+- Fig 2 Resolution for varying relatedness using GRM, encGRM and encG-reg. 
 - Fig S1 Heatmap presenting the role random matrix played in matrix multiplication. 
 - Fig S2 Sampling variance of GRM, encGRM and encG-reg in simulations. 
 - Fig S3 Validation for the sampling variance for GRM (assumption: binomial distribution). 
-- Fig S4 Resolution for varying relatedness using GRM, encGRM and encG-reg. 
 
 
 ## 2-Protocols
