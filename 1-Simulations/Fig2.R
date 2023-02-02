@@ -1,4 +1,4 @@
-## Figure S4 Resolution for varying relatedness using GRM, encGRM and encG-reg
+## Figure 2 Resolution for varying relatedness using GRM, encGRM and encG-reg
 ## encGRMsource.R includes functions:
 ##                RandomMatrixEncryption()
 ##                GenerateGeno()
