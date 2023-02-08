@@ -15,18 +15,17 @@ library(grid)
 library(cowplot)
 library(jcolors)
 
-color = c("#66CD00","#009ACD","#FF4500","#9A32CD","grey80")
+color = c("grey80","#66CD00","#009ACD","#FF4500")
 n1    = 200                           # sample size in cohort 1
 n2    = 200                           # sample size in cohort 2
 alpha = 0.05/(n1*n2)                  # type I error
 beta  = 0.1                           # type II error two tail test
-D     = 4                             # top degree of relatedness included in simulation
+D     = 3                             # top degree of relatedness included in simulation
 r     = c(0:(D-1))                    # a vector of various degree of relatedness included in simulation
-n_cp  = rep(10, D)                    # numbers for each degree of relatedness
+n_cp  = c(10,10,10,0)                 # numbers for each degree of relatedness
 n1_0  = n1-sum(n_cp)                  # remaining sample size of unrelated individuals in cohort 1
 n2_0  = n2-sum(n_cp)                  # remaining sample size of unrelated individuals in cohort 2
 setavec=(0.5)^r                       # a vector of expected relatedness score for various degree of relatedness
-setavec=setavec*0.9                   # a discount of expected relatedness score
 Mvec = ceiling(2 * ( ( qnorm(1-beta)*sqrt(1+setavec^2) + qnorm(1-alpha) ) / setavec )^2) 
                                       # a vector of various number of markers based on Eq3 (2 times larger)
 
@@ -72,7 +71,7 @@ for(m in 1:length(Mvec))
     lab = lab_relations_true(n1, n2, n_cp)
     R = k-1
     dt[[count]] = data.frame(x=as.vector(G21hat), y=as.vector(G21), lab=as.factor(lab), R=R, M=M, K=K, yin=yin, xin=xin)
-    
+    dt[[count]] = dt[[count]] %>% dplyr::arrange(lab)
     count=count+1
   }
 }
@@ -81,6 +80,8 @@ for(m in 1:length(Mvec))
 p = list()
 for (i in 1:(count-1))
 {
+  M = dt[[i]]$M[1]
+  K = dt[[i]]$K[1]
   p[[i]] = ggplot(dt[[i]], aes(x=x,y=y,grp=lab))+
     geom_point(aes(color=lab), size=0.3) +
     geom_hline(aes(yintercept = yin), color="blue", alpha=0.5, linetype = 5) +
@@ -89,8 +90,9 @@ for (i in 1:(count-1))
     geom_vline(aes(xintercept = -xin), color="red", alpha=0.5, linetype = 5) +
     scale_x_continuous(name = "", limits=c(-1.15, 1.15)) +
     scale_y_continuous(name = "",limits=c(-1.15, 1.15)) +
-    scale_color_manual(values=color, name="Relations", 
-                       labels=c("Identical","1st-degree","2nd-degree","3rd-degree","Unrelated")) +  
+    scale_color_manual(values=color, name="Relatedness", 
+                       labels=c("Unrelated","Identical","1st-degree","2nd-degree")) +  
+    labs(title = bquote(italic(m[e])~"="~.(M)~","~italic(k)~"="~.(K)))+
     theme_article()+
     theme(legend.position = "none", 
           plot.title = element_text(hjust = 0.5, size = 9), 
@@ -104,11 +106,10 @@ for(m in 1:length(Mvec))
 {
   M = Mvec[m]
   dpy[[m]] = ggplot()+
-    stat_function(fun = dnorm, args = list(  1, sqrt((1+(0.25)^0)/M)), n = 1000, color = color[1])+
-    stat_function(fun = dnorm, args = list(1/2, sqrt((1+(0.25)^1)/M)), n = 1000, color = color[2])+
-    stat_function(fun = dnorm, args = list(1/4, sqrt((1+(0.25)^2)/M)), n = 1000, color = color[3])+
-    stat_function(fun = dnorm, args = list(1/8, sqrt((1+(0.25)^3)/M)), n = 1000, color = color[4])+
-    stat_function(fun = dnorm, args = list(  0, sqrt(           1/M)), n = 1000, color = color[5])+
+    stat_function(fun = dnorm, args = list(  0, sqrt(           1/M)), n = 1000, color = color[1])+
+    stat_function(fun = dnorm, args = list(  1, sqrt((1+(0.25)^0)/M)), n = 1000, color = color[2])+
+    stat_function(fun = dnorm, args = list(1/2, sqrt((1+(0.25)^1)/M)), n = 1000, color = color[3])+
+    stat_function(fun = dnorm, args = list(1/4, sqrt((1+(0.25)^2)/M)), n = 1000, color = color[4])+
     scale_x_continuous(name = "", limits=c(-1.15, 1.15), position = "top") +
     scale_y_reverse(name = "") +
     coord_flip()+
@@ -120,17 +121,16 @@ for(m in 1:length(Mvec))
           panel.border = element_blank())
 }
 dpx = list()
-for(k in 1:4)
+for(k in 1:D)
 {
-  m = 4
+  m = D
   M = Mvec[m]
   K = ceiling(1/(1/(( ( qnorm(1-beta)*sqrt(1-setavec[k]^2) + qnorm(1-alpha) ) / setavec[k] )^2 )-1/Mvec[m]))
   dpx[[k]] = ggplot()+
-    stat_function(fun = dnorm, args = list(  1, sqrt((1-(0.25)^0)/M + (1-(0.25)^0)/K)), n = 1000, color = color[1])+
-    stat_function(fun = dnorm, args = list(1/2, sqrt((1-(0.25)^1)/M + (1-(0.25)^1)/K)), n = 1000, color = color[2])+
-    stat_function(fun = dnorm, args = list(1/4, sqrt((1-(0.25)^2)/M + (1-(0.25)^2)/K)), n = 1000, color = color[3])+
-    stat_function(fun = dnorm, args = list(1/8, sqrt((1-(0.25)^3)/M + (1-(0.25)^3)/K)), n = 1000, color = color[4])+
-    stat_function(fun = dnorm, args = list(  0, sqrt(           1/M +            1/K)), n = 1000, color = color[5])+
+    stat_function(fun = dnorm, args = list(  0, sqrt(           1/M +            1/K)), n = 1000, color = color[1])+
+    stat_function(fun = dnorm, args = list(  1, sqrt((1-(0.25)^0)/M + (1-(0.25)^0)/K)), n = 1000, color = color[2])+
+    stat_function(fun = dnorm, args = list(1/2, sqrt((1-(0.25)^1)/M + (1-(0.25)^1)/K)), n = 1000, color = color[3])+
+    stat_function(fun = dnorm, args = list(1/4, sqrt((1-(0.25)^2)/M + (1-(0.25)^2)/K)), n = 1000, color = color[4])+
     scale_x_continuous(name = "", limits=c(-1.15, 1.15)) +
     scale_y_continuous(name = "") +
     theme_article()+
@@ -145,15 +145,21 @@ for(k in 1:4)
 blankPlot = ggplot()+geom_blank(aes(1,1)) + 
   cowplot::theme_nothing()
 
+## fig lengend
+leg <- get_legend(p[[1]] + 
+                    theme(legend.position = "right", legend.title = element_text(size = 12)) + 
+                    guides(color = guide_legend(override.aes = list(size=2))))
+
 ## output
-png("simu-MvsK-encG-reg.png", width = 900, height = 900)
-final = egg::ggarrange(dpy[[1]] ,   p[[1]]   , blankPlot, blankPlot, blankPlot,
-                       dpy[[2]] ,   p[[2]]   , p[[3]]   , blankPlot, blankPlot,
-                       dpy[[3]] ,   p[[4]]   , p[[5]]   , p[[6]]   , blankPlot,
-                       dpy[[4]] ,   p[[7]]   , p[[8]]   , p[[9]]   , p[[10]]  ,
-                       blankPlot,   dpx[[1]] , dpx[[2]] , dpx[[3]] , dpx[[4]] ,
-                       nrow = 5 , ncol = 5   , widths = c(1,2,2,2,2),heights = c(2,2,2,2,1))
-annotate_figure(final, left = "Relatedness by GRM", bottom = "Relatedness by encG-reg")
+final = egg::ggarrange(dpy[[1]] ,   p[[1]]   , blankPlot, blankPlot, 
+                       dpy[[2]] ,   p[[2]]   , p[[3]]   , blankPlot, 
+                       dpy[[3]] ,   p[[4]]   , p[[5]]   , p[[6]]   , 
+                       blankPlot,   dpx[[1]] , dpx[[2]] , dpx[[3]] , 
+                       nrow = 4 , ncol = 4   , widths = c(1,2,2,2),heights = c(2,2,2,1))
+final = annotate_figure(final, left = "Relatedness by GRM", bottom = "Relatedness by encG-reg")
+# png("simu-MvsK-encG-reg.png", width = 750, height = 700)
+pdf("simu-MvsK-encG-reg.pdf", width = 10, height = 9)
+ggpubr::ggarrange(final, as_ggplot(leg), nrow = 1, widths = c(6,1))
 dev.off()
 
 
@@ -196,7 +202,7 @@ for(m in 1:length(Mvec))
     lab = lab_relations_true(n1, n2, n_cp)
     R = k-1
     dt[[count]] = data.frame(x=as.vector(G21hat), y=as.vector(G21), lab=as.factor(lab), R=R, M=M, K=K, yin=yin, xin=xin)
-    
+    dt[[count]] = dt[[count]] %>% dplyr::arrange(lab)
     count=count+1
   }
 }
@@ -205,6 +211,8 @@ for(m in 1:length(Mvec))
 p = list()
 for (i in 1:(count-1))
 {
+  M = dt[[i]]$M[1]
+  K = dt[[i]]$K[1]
   p[[i]] = ggplot(dt[[i]], aes(x=x,y=y,grp=lab))+
     geom_point(aes(color=lab), size=0.3) +
     geom_hline(aes(yintercept =  yin), color="blue", alpha=0.5, linetype = 5) +
@@ -213,8 +221,9 @@ for (i in 1:(count-1))
     geom_vline(aes(xintercept = -xin), color="red" , alpha=0.5, linetype = 5) +
     scale_x_continuous(name = "", limits=c(-1.15, 1.15)) +
     scale_y_continuous(name = "", limits=c(-1.15, 1.15)) +
-    scale_color_manual(values=color, name="Relations", 
-                       labels=c("Identical","1st-degree","2nd-degree","3rd-degree","Unrelated")) +  
+    scale_color_manual(values=color, name="Relatedness", 
+                       labels=c("Unrelated","Identical","1st-degree","2nd-degree")) +  
+    labs(title = bquote(italic(m[e])~"="~.(M)~","~italic(k)~"="~.(K)))+
     theme_article()+
     theme(legend.position = "none", 
           plot.title = element_text(hjust = 0.5, size = 9), 
@@ -228,11 +237,10 @@ for(m in 1:length(Mvec))
 {
   M = Mvec[m]
   dpy[[m]] = ggplot()+
-    stat_function(fun = dnorm, args = list(  1, sqrt((1+(0.25)^0)/M)), n = 1000, color = color[1])+
-    stat_function(fun = dnorm, args = list(1/2, sqrt((1+(0.25)^1)/M)), n = 1000, color = color[2])+
-    stat_function(fun = dnorm, args = list(1/4, sqrt((1+(0.25)^2)/M)), n = 1000, color = color[3])+
-    stat_function(fun = dnorm, args = list(1/8, sqrt((1+(0.25)^3)/M)), n = 1000, color = color[4])+
-    stat_function(fun = dnorm, args = list(  0, sqrt(           1/M)), n = 1000, color = color[5])+
+    stat_function(fun = dnorm, args = list(  0, sqrt(           1/M)), n = 1000, color = color[1])+
+    stat_function(fun = dnorm, args = list(  1, sqrt((1+(0.25)^0)/M)), n = 1000, color = color[2])+
+    stat_function(fun = dnorm, args = list(1/2, sqrt((1+(0.25)^1)/M)), n = 1000, color = color[3])+
+    stat_function(fun = dnorm, args = list(1/4, sqrt((1+(0.25)^2)/M)), n = 1000, color = color[4])+
     scale_x_continuous(name = "", limits=c(-1.15, 1.15), position = "top") +
     scale_y_reverse(name = "") +
     coord_flip()+
@@ -244,17 +252,16 @@ for(m in 1:length(Mvec))
           panel.border = element_blank())
 }
 dpx = list()
-for(k in 1:4)
+for(k in 1:D)
 {
-  m = 4
+  m = D
   K = ceiling(1/(1/(( ( qnorm(1-beta)*sqrt(1+setavec[k]^2) + qnorm(1-alpha) ) / setavec[k] )^2 )-1/Mvec[m]))
   M = Mvec[m]
   dpx[[k]] = ggplot()+
-    stat_function(fun = dnorm, args = list(  1, sqrt((1+(0.25)^0)/M + (1+(0.25)^0)/K)), n = 1000, color = color[1])+
-    stat_function(fun = dnorm, args = list(1/2, sqrt((1+(0.25)^1)/M + (1+(0.25)^1)/K)), n = 1000, color = color[2])+
-    stat_function(fun = dnorm, args = list(1/4, sqrt((1+(0.25)^2)/M + (1+(0.25)^2)/K)), n = 1000, color = color[3])+
-    stat_function(fun = dnorm, args = list(1/8, sqrt((1+(0.25)^3)/M + (1+(0.25)^3)/K)), n = 1000, color = color[4])+
-    stat_function(fun = dnorm, args = list(  0, sqrt(           1/M +            1/K)), n = 1000, color = color[5])+
+    stat_function(fun = dnorm, args = list(  0, sqrt(           1/M +            1/K)), n = 1000, color = color[1])+
+    stat_function(fun = dnorm, args = list(  1, sqrt((1+(0.25)^0)/M + (1+(0.25)^0)/K)), n = 1000, color = color[2])+
+    stat_function(fun = dnorm, args = list(1/2, sqrt((1+(0.25)^1)/M + (1+(0.25)^1)/K)), n = 1000, color = color[3])+
+    stat_function(fun = dnorm, args = list(1/4, sqrt((1+(0.25)^2)/M + (1+(0.25)^2)/K)), n = 1000, color = color[4])+
     scale_x_continuous(name = "", limits=c(-1.15, 1.15)) +
     scale_y_continuous(name = "") +
     theme_article()+
@@ -269,13 +276,19 @@ for(k in 1:4)
 blankPlot = ggplot()+geom_blank(aes(1,1)) + 
   cowplot::theme_nothing()
 
+## fig lengend
+leg <- get_legend(p[[1]] + 
+                    theme(legend.position = "right", legend.title = element_text(size = 12)) + 
+                    guides(color = guide_legend(override.aes = list(size=2))))
+
 ## output
-png("simu-MvsK-encGRM.png", width = 900, height = 900)
-final = egg::ggarrange(dpy[[1]] ,   p[[1]]   , blankPlot, blankPlot, blankPlot,
-                       dpy[[2]] ,   p[[2]]   , p[[3]]   , blankPlot, blankPlot,
-                       dpy[[3]] ,   p[[4]]   , p[[5]]   , p[[6]]   , blankPlot,
-                       dpy[[4]] ,   p[[7]]   , p[[8]]   , p[[9]]   , p[[10]]  ,
-                       blankPlot,   dpx[[1]] , dpx[[2]] , dpx[[3]] , dpx[[4]] ,
-                       nrow = 5 , ncol = 5   , widths = c(1,2,2,2,2),heights = c(2,2,2,2,1))
-annotate_figure(final, left = "Relatedness by GRM", bottom = "Relatedness by encGRM")
+final = egg::ggarrange(dpy[[1]] ,   p[[1]]   , blankPlot, blankPlot, 
+                       dpy[[2]] ,   p[[2]]   , p[[3]]   , blankPlot, 
+                       dpy[[3]] ,   p[[4]]   , p[[5]]   , p[[6]]   , 
+                       blankPlot,   dpx[[1]] , dpx[[2]] , dpx[[3]] , 
+                       nrow = 4 , ncol = 4   , widths = c(1,2,2,2),heights = c(2,2,2,1))
+final = annotate_figure(final, left = "Relatedness by GRM", bottom = "Relatedness by encGRM")
+# png("simu-MvsK-encGRM.png", width = 750, height = 700)
+pdf("simu-MvsK-encGRM.pdf", width = 10, height = 9)
+ggpubr::ggarrange(final, as_ggplot(leg), nrow = 1, widths = c(6,1))
 dev.off()
