@@ -1,4 +1,4 @@
-## Figure S3 Validation for the sampling variance for GRM (assumption: binomial distribution)
+## Figure S2 Validation for the sampling variance for GRM (assumption: binomial distribution)
 ## Note: This may take you ~1.5h
 ## encGRMsource.R includes functions:
 ##                RandomMatrixEncryption()
