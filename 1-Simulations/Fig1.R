@@ -1,4 +1,4 @@
-## Figure 1 Resolution for varying relatedness using GRM, encGRM and encG-reg
+## Figure 2 Resolution for varying relatedness using GRM, encGRM and encG-reg
 ## encGRMsource.R includes functions:
 ##                RandomMatrixEncryption()
 ##                GenerateGeno()
@@ -27,7 +27,7 @@ n1_0  = n1-sum(n_cp)                  # remaining sample size of unrelated indiv
 n2_0  = n2-sum(n_cp)                  # remaining sample size of unrelated individuals in cohort 2
 setavec=(0.5)^r                       # a vector of expected relatedness score for various degree of relatedness
 Mvec = ceiling(2 * ( ( qnorm(1-beta)*sqrt(1+setavec^2) + qnorm(1-alpha) ) / setavec )^2) 
-                                      # a vector of various number of markers based on Eq3 (2 times larger)
+# a vector of various number of markers based on Eq3 (2 times larger)
 
 #### GRM vs encG-reg ####
 count=1
@@ -157,8 +157,8 @@ final = egg::ggarrange(dpy[[1]] ,   p[[1]]   , blankPlot, blankPlot,
                        blankPlot,   dpx[[1]] , dpx[[2]] , dpx[[3]] , 
                        nrow = 4 , ncol = 4   , widths = c(1,2,2,2),heights = c(2,2,2,1))
 final = annotate_figure(final, left = "Relatedness by GRM", bottom = "Relatedness by encG-reg")
-# png("simu-MvsK-encG-reg.png", width = 750, height = 700)
-pdf("simu-MvsK-encG-reg.pdf", width = 10, height = 9)
+png("simu-MvsK-encG-reg.png", width = 750, height = 700)
+# pdf("simu-MvsK-encG-reg.pdf", width = 10, height = 9)
 ggpubr::ggarrange(final, as_ggplot(leg), nrow = 1, widths = c(6,1))
 dev.off()
 
@@ -191,7 +191,7 @@ for(m in 1:length(Mvec))
     S = matrix(rnorm(M*K,sd=sqrt(1/M)), M, K)
     X1hat <- tcrossprod(X1, t(S))
     X2hat <- tcrossprod(X2, t(S))
-
+    
     ## GRM and encG-reg
     G21hat   = tcrossprod(X2hat, X1hat)/ K
     G21      = tcrossprod(X2, X1) / M
@@ -288,7 +288,7 @@ final = egg::ggarrange(dpy[[1]] ,   p[[1]]   , blankPlot, blankPlot,
                        blankPlot,   dpx[[1]] , dpx[[2]] , dpx[[3]] , 
                        nrow = 4 , ncol = 4   , widths = c(1,2,2,2),heights = c(2,2,2,1))
 final = annotate_figure(final, left = "Relatedness by GRM", bottom = "Relatedness by encGRM")
-# png("simu-MvsK-encGRM.png", width = 750, height = 700)
-pdf("simu-MvsK-encGRM.pdf", width = 10, height = 9)
+png("simu-MvsK-encGRM.png", width = 750, height = 700)
+# pdf("simu-MvsK-encGRM.pdf", width = 10, height = 9)
 ggpubr::ggarrange(final, as_ggplot(leg), nrow = 1, widths = c(6,1))
 dev.off()
