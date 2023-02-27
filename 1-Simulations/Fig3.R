@@ -1,4 +1,4 @@
-## Figure 2 Validation for the sampling variance for GRM, encGRM, and encG-reg
+## Figure 3 Validation for the sampling variance for GRM, encGRM, and encG-reg
 ## encGRMsource.R includes functions:
 ##                RandomMatrixEncryption()
 ##                GenerateGeno()
