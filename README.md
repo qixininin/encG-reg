@@ -83,7 +83,7 @@ Upon the **\*.frq** files received, central site identifies the shared SNPs acro
 
 #### Step 2.1 QC examination
 
-To examine across-cohort quality control, we used CONVERGE data set as the reference control to reveal any possible mistake made in [Step 1]. This examination includes MAF density plot between CONVERGE and every data set from the collaborators, and plot special shift between major and minor alleles when MAF approaches 0.5.
+To examine across-cohort quality control, we used CONVERGE data set as the reference control to reveal any possible mistake made in [Step 1](###Step-1-Within-cohort-quality-controls). This examination includes MAF density plot between CONVERGE and every data set from the collaborators, and plot special shift between major and minor alleles when MAF approaches 0.5.
 
 #### Step 2.2 Shared SNPs
 
@@ -226,6 +226,6 @@ Return **Golden.\${user}.sscore** to central site.
 
 ### Step 4 Perform encG-reg across cohorts
 
-Cohort-wise comparison for overlapping relatives will be conducted by central site. A foolproof implementation in [Step 3.2](####Step-3.2-Merge-with-1KG-CHN) leads to at least 1KG-CHN samples consistently identified as "overlap" between every pair of cohorts in [Step 4](### Step 4 Perform encG-reg across cohorts). Looking forward other possible overlapping that may pop out as expected as unexpected.
+Cohort-wise comparison for overlapping relatives will be conducted by central site. A foolproof implementation in [Step 3.2](####Step-3.2-Merge-with-1KG-CHN) leads to at least 1KG-CHN samples consistently identified as "overlap" between every pair of cohorts in [Step 4](###-Step-4-Perform-encG-reg-across-cohorts). Looking forward other possible overlapping that may pop out as expected as unexpected.
 
 Bingo!
