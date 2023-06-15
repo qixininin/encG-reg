@@ -1,8 +1,3 @@
----
-editor_options: 
-  markdown: 
-    wrap: sentence
----
 
 # encG-reg
 
@@ -30,16 +25,20 @@ We provide suggested commands for your possible reference, and your environment 
 
 ### Step 1 Within-cohort quality controls
 
-``` shell
-# Set environmental variables (!!!!NEED TO BE MODIFIED!!!!)
-# Please replace *YOUR_COHORT_ID* with the Cohort ID we provide
-# Please replace *YOUR_PREFIX* with your plink bfile prefix
-user=*YOUR_COHORT_ID* bfile=*YOUR_PREFIX*
+Set environmental variables (!!!!NEED TO BE MODIFIED!!!!)
 
-# Inclusion criteria
-# (1) autosome SNPs only
-# (2) SNPs with minor allele frequency (MAF) > 0.05 only
-# (3) SNPs with missing rate < 0.2 only Suggested plink command: 
+Please replace *YOUR_COHORT_ID* with the Cohort ID we provide
+
+Please replace *YOUR_PREFIX* with your plink bfile prefix
+``` shell
+user=*YOUR_COHORT_ID* bfile=*YOUR_PREFIX*
+```
+
+Inclusion criteria
+(1) autosome SNPs only
+(2) SNPs with minor allele frequency (MAF) > 0.05 only
+(3) SNPs with missing rate < 0.2 only Suggested plink command: 
+``` shell
 plink --bfile ${bfile} --autosome --snps-only --maf 0.05 --geno 0.2 --no-pheno --make-bed --out ${user}
 plink --bfile ${user} --freq --out ${user}
 ```
@@ -58,7 +57,7 @@ To be a very good citizen in this collaboration, the suggested name of \*.frq fi
 | A2      | Allele 2 (usually major)      |
 | MAF     | Allele 1 frequency            |
 | NCHROBS | Number of allele observations |
-|         |                               |
+
 
 | CHR | SNP         | A1  | A2  | MAF     | NCHROBS |
 |-----|-------------|-----|-----|---------|---------|
@@ -71,7 +70,7 @@ To be a very good citizen in this collaboration, the suggested name of \*.frq fi
 | 1   | rs200482301 | G   | T   | 0.4736  | 416     |
 | 1   | 1:54716     | T   | C   | 0.1298  | 416     |
 | 1   | rs3107975   | C   | T   | 0.137   | 416     |
-|     |             |     |     |         |         |
+
 
 ### Step 2 Determine m and k
 
@@ -87,7 +86,7 @@ Examination reports are given in Appendix.
 #### Step 2.2 Shared SNPs
 
 We took the intersection of all SNP lists among all cohorts based on their SNP ID in ".frq" files.
-In total, 1462 SNPs were in common among 12 cohorts of 1KG-CHN, UKB-CHN, CONVERGE, MESA, ALS, SYSU, BIG1, BIG2, Fudan, Yikon1, Yikon2 and Westlake.
+In total, 1462 SNPs were in common among 12 cohorts of 1KG-CHN, UKB-CHN, CONVERGE, MESA, ALS, SYSU, CAS1, CAS2, Fudan, Yikon1, Yikon2 and Westlake.
 Intersection information and MAF density plots are also given in Appendix.
 
 #### Step 2.3 Genetic background across-cohort
@@ -103,5 +102,33 @@ The number of shared SNPs are enough for identifying 1-degree relatedness, we wo
 Server agent will send GenerateRandMat.R, random seed, k, an SNP list, and 1KG-CHN binary format files to each collaborator.
 
 ### Step 3 Encrypt genotype matrix
+
+This step is similar to generate risk profile score in genetic prediction. Although a routine profile scoring step is very unlikely misconducted alone, unfortunate systematic mistakes may creep in because of some discordant reference alleles across the cohorts. As foolproof verification, every collaborator will receive 1KG-CHN and merge into their own data (step 3.2).
+
+Set environmental variables (!!!!NEED TO BE MODIFIED!!!!)
+
+Again, please replace *YOUR_ COHORT_ID* with the Cohort ID we provided
+
+```shell
+user=*YOUR_ COHORT_ID*
+```
+
+#### Step 3.1 Implement randomization
+Users are asked to generate an m-by-k matrix whose elements are sample from N(0,1/m)
+
+Obtain the number of markers (m)
+```shell
+awk 'END{print NR}' Golden.snpA1 > Golden.m
+```
+This Rscript automatically reads parameters stored in Golden.m and Golden.k
+
+And generate Golden.key, an m-by-k matrix
+```shell
+Rscript GenerateRandMat.R Golden
+```
+You are supposed to see a matrix like this
+
+
+
 
 ### Step 4 Perform encG-reg across cohorts
