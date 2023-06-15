@@ -1,6 +1,6 @@
-# encG-reg
+#encG-reg
 
-## 1-Simulations
+##1-Simulations
 
 This github contains simulation codes of GRM, encGRM and encG-reg.
 
@@ -12,7 +12,7 @@ This github contains simulation codes of GRM, encGRM and encG-reg.
 
 -   Fig S2 Validation for the sampling variance for GRM (assumption: binomial distribution).
 
-## 2-Protocols
+##2-Protocols
 
 We offered a user-friendly protocol for encG-reg.
 
@@ -22,7 +22,7 @@ There are four steps in total, where steps 1 and 3 are performed by each collabo
 
 We provide suggested commands for your possible reference, and your environment should have **plink1.9**, **plink2.0** and **R** installed.
 
-### Step 1 Within-cohort quality controls
+###Step 1 Within-cohort quality controls
 
 Set environmental variables **(!!!!NEED TO BE MODIFIED!!!!)**
 
@@ -77,41 +77,41 @@ An example of **1KG-CHN.frq** is:
 
 Return **\*.frq** to central site. To be a good citizen in this collaboration, the suggested name of **\*.frq** file will be **"YOUR_COHORT_ID.frq"**.
 
-### Step 2 Determine m and k
+###Step 2 Determine m and k
 
 Upon the **\*.frq** files received, central site identifies the shared SNPs across cohorts and choose the optimal SNP set, which will be used for randomization algorithm. As the genotypes are generated in their respective platforms, to make life easier central site excludes: palindromic bi-allelic loci, say A-T, G-C; strand-flipped loci, say A-G in one cohort but T-C in another.
 
-#### Step 2.1 QC examination
+####Step 2.1 QC examination
 
-To examine across-cohort quality control, we used CONVERGE data set as the reference control to reveal any possible mistake made in [Step 1](###Step-1-Within-cohort-quality-controls). This examination includes MAF density plot between CONVERGE and every data set from the collaborators, and plot special shift between major and minor alleles when MAF approaches 0.5. Examination reports are given in Appendix.
+To examine across-cohort quality control, we used CONVERGE data set as the reference control to reveal any possible mistake made in [Step 1](###Step-1-Within\-cohort-quality-controls). This examination includes MAF density plot between CONVERGE and every data set from the collaborators, and plot special shift between major and minor alleles when MAF approaches 0.5.
 
-#### Step 2.2 Shared SNPs
+####Step 2.2 Shared SNPs
 
-We took the intersection of all SNP lists among all cohorts based on their SNP ID in ".frq" files. In total, 1462 SNPs were in common among 12 cohorts of 1KG-CHN, UKB-CHN, CONVERGE, MESA, ALS, SYSU, CAS1, CAS2, Fudan, Yikon1, Yikon2 and Westlake. Intersection information and MAF density plots are also given in Appendix.
+We took the intersection of all SNP lists among all cohorts based on their SNP ID in **\*.frq** files. In total, 1462 SNPs were in common among 12 cohorts of 1KG-CHN, UKB-CHN, CONVERGE, MESA, SBWCH, CAS1, CAS2, Fudan, Yikon1, Yikon2 and WBBC.
 
-#### Step 2.3 Genetic background across-cohort
+####Step 2.3 Genetic background across-cohort
 
-We conduct principal component analysis (PCA) based on reported allele frequencies and use the population genetics Fst statistic to verify the genetic origin of each cohort. PCA plot and pseudo-structure plot are given in Appendix.
+We conduct principal component analysis based on reported allele frequencies (**fPCA**) and use the population genetics Fst statistic to verify the genetic origin of each cohort (**fStructure**).
 
-#### Step 2.4 Determine m and k
+####Step 2.4 Determine m and k
 
-According to Eq 1 and Eq 2, central site then determines m and k upon the survived SNPs. The number of shared SNPs are enough for identifying 1-degree relatedness, we would offer a list of 500 shared SNPs, whose m_e is 477 and the corresponding minimal number of k is 757.
+Central site determines m and k upon the survived SNPs. The number of shared SNPs are enough for identifying 1st-degree relatedness, we would offer a list of shared SNPs.
 
-central site will send GenerateRandMat.R, random seed, k, an SNP list, and 1KG-CHN binary format files to each collaborator.
+central site will send **GenerateRandMat.R**, **random seed**, **k**, **an SNP list**, and **1KG-CHN binary plink format files** to each collaborator.
 
-### Step 3 Encrypt genotype matrix
+###Step 3 Encrypt genotype matrix
 
 This step is similar to generate risk profile score in genetic prediction. Although a routine profile scoring step is very unlikely misconducted alone, unfortunate systematic mistakes may creep in because of some discordant reference alleles across the cohorts. As foolproof verification, every collaborator will receive 1KG-CHN and merge into their own data (step 3.2).
 
-Set environmental variables (!!!!NEED TO BE MODIFIED!!!!)
+Set environmental variables **(!!!!NEED TO BE MODIFIED!!!!)**
 
-Again, please replace **YOUR_COHORT_ID** with the Cohort ID we provided
+Again, please replace **YOUR_COHORT_ID** with the Cohort ID.
 
 ``` shell
 user=*YOUR_COHORT_ID*
 ```
 
-#### Step 3.1 Implement randomization
+####Step 3.1 Implement randomization
 
 Users are asked to generate an m-by-k matrix whose elements are sample from N(0,1/m)
 
@@ -129,6 +129,8 @@ Rscript GenerateRandMat.R Golden
 
 You are supposed to see a matrix like this
 
+
+
 Combine key with SNPID and A1 alleles by columns.
 
 ``` shell
@@ -143,7 +145,7 @@ You are supposed to see a data table like this
 | rs2 | A   | -0.0123 | 0.0443  | -0.0060 | \... |
 | rs3 | G   | -0.0159 | -0.0019 | 0.0426  | \... |
 
-#### Step 3.2 Merge with 1KG-CHN (foolproof verification)
+####Step 3.2 Merge with 1KG-CHN (foolproof verification)
 
 First extract SNPs in your bfiles by plink.
 
@@ -160,7 +162,7 @@ These files will be used in Step 3.3 plink2 --score
 plink --bfile 1KG-CHN.extract --bmerge ${user}.extract --make-bed --out Golden.merged
 ```
 
-#### Step 3.3 Genotype encryption
+####Step 3.3 Genotype encryption
 
 Users are asked to encrypt their genotype matrix with the same random matrix by plink2.0 and return the encrypted genotype matrix to central site.
 
@@ -175,7 +177,6 @@ plink2 --bfile Golden.merged --score Golden.snpA1key 1 2 variance-standardize --
 
 Return **Golden.\${user}.sscore** to central site.
 
-<<<<<<< HEAD
 We adopt one of the plink2.0 formats ".sscore" [plink2.0 formats:.sscore](https://www.cog-genomics.org/plink/2.0/formats#sscore) as a standard sharing format for sharing encrypted genotype data. ".sscore" files include the following contents.
 
 | FID   | IID   | ALLELE_CT | NAMED_ALLELE_DOSAGE_SUM   | SCORE1_AVG | SCORE2_AVG | SCORE3_AVG | \...  |
@@ -184,7 +185,7 @@ We adopt one of the plink2.0 formats ".sscore" [plink2.0 formats:.sscore](https:
 | FID2  | IID2  | 970       | 267                       | -8.676E-05 | 1.800E-04  | 1.612E-03  | \...  |
 | FID3  | IID3  | 990       | 273                       | -5.005E-04 | 3.104E-05  | -6.440E-04 | \...  |
 
-#### Step 3.2 Merge with 1KG-CHN (foolproof verification)
+####Step 3.2 Merge with 1KG-CHN (foolproof verification)
 
 First extract SNPs in your bfiles by plink.
 
@@ -201,7 +202,7 @@ These files will be used in Step 3.3 plink2 --score
 plink --bfile 1KG-CHN.extract --bmerge ${user}.extract --make-bed --out Golden.merged
 ```
 
-#### Step 3.3 Genotype encryption
+####Step 3.3 Genotype encryption
 
 Users are asked to encrypt their genotype matrix with the same random matrix by plink2.0 and return the encrypted genotype matrix to central site.
 
@@ -216,7 +217,7 @@ plink2 --bfile Golden.merged --score Golden.snpA1key 1 2 variance-standardize --
 
 Return **Golden.\${user}.sscore** to central site.
 
-### Step 4 Perform encG-reg across cohorts
+###Step 4 Perform encG-reg across cohorts
 
 Cohort-wise comparison for overlapping relatives will be conducted by central site. A foolproof implementation in Step 3.2 leads to at least 1KG-CHN samples consistently identified as "overlap" between every pair of cohorts in step 4. Looking forward other possible overlapping that may pop out as expected as unexpected.
 
