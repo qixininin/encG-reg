@@ -83,29 +83,29 @@ Upon the **\*.frq** files received, central site identifies the shared SNPs acro
 
 #### Step 2.1 QC examination
 
-To examine across-cohort quality control, we used CONVERGE data set as the reference control to reveal any possible mistake made in [Step 1](###Step-1-Within-cohort-quality-controls). This examination includes MAF density plot between CONVERGE and every data set from the collaborators, and plot special shift between major and minor alleles when MAF approaches 0.5. Examination reports are given in Appendix.
+To examine across-cohort quality control, we used CONVERGE data set as the reference control to reveal any possible mistake made in [Step 1](###Step-1-Within\-cohort-quality-controls). This examination includes MAF density plot between CONVERGE and every data set from the collaborators, and plot special shift between major and minor alleles when MAF approaches 0.5.
 
 #### Step 2.2 Shared SNPs
 
-We took the intersection of all SNP lists among all cohorts based on their SNP ID in ".frq" files. In total, 1462 SNPs were in common among 12 cohorts of 1KG-CHN, UKB-CHN, CONVERGE, MESA, ALS, SYSU, CAS1, CAS2, Fudan, Yikon1, Yikon2 and Westlake. Intersection information and MAF density plots are also given in Appendix.
+We took the intersection of all SNP lists among all cohorts based on their SNP ID in **\*.frq** files. In total, 1462 SNPs were in common among 12 cohorts of 1KG-CHN, UKB-CHN, CONVERGE, MESA, SBWCH, CAS1, CAS2, Fudan, Yikon1, Yikon2 and WBBC.
 
 #### Step 2.3 Genetic background across-cohort
 
-We conduct principal component analysis (PCA) based on reported allele frequencies and use the population genetics Fst statistic to verify the genetic origin of each cohort. PCA plot and pseudo-structure plot are given in Appendix.
+We conduct principal component analysis based on reported allele frequencies (**fPCA**) and use the population genetics Fst statistic to verify the genetic origin of each cohort (**fStructure**).
 
 #### Step 2.4 Determine m and k
 
-According to Eq 1 and Eq 2, central site then determines m and k upon the survived SNPs. The number of shared SNPs are enough for identifying 1-degree relatedness, we would offer a list of 500 shared SNPs, whose m_e is 477 and the corresponding minimal number of k is 757.
+Central site determines m and k upon the survived SNPs. The number of shared SNPs are enough for identifying 1st-degree relatedness, we would offer a list of shared SNPs.
 
-central site will send GenerateRandMat.R, random seed, k, an SNP list, and 1KG-CHN binary format files to each collaborator.
+central site will send **GenerateRandMat.R**, **random seed**, **k**, **an SNP list**, and **1KG-CHN binary plink format files** to each collaborator.
 
 ### Step 3 Encrypt genotype matrix
 
 This step is similar to generate risk profile score in genetic prediction. Although a routine profile scoring step is very unlikely misconducted alone, unfortunate systematic mistakes may creep in because of some discordant reference alleles across the cohorts. As foolproof verification, every collaborator will receive 1KG-CHN and merge into their own data (step 3.2).
 
-Set environmental variables (!!!!NEED TO BE MODIFIED!!!!)
+Set environmental variables **(!!!!NEED TO BE MODIFIED!!!!)**
 
-Again, please replace **YOUR_COHORT_ID** with the Cohort ID we provided
+Again, please replace **YOUR_COHORT_ID** with the Cohort ID.
 
 ``` shell
 user=*YOUR_COHORT_ID*
@@ -128,6 +128,11 @@ Rscript GenerateRandMat.R Golden
 ```
 
 You are supposed to see a matrix like this
+
+| 0.0373  | -0.0250	| 0.0309  | \... | 
+| -0.0123	| 0.0443  | -0.0060	| \... | 
+| -0.0159	| -0.0019	| 0.0426  | \... | 
+
 
 Combine key with SNPID and A1 alleles by columns.
 
@@ -175,7 +180,6 @@ plink2 --bfile Golden.merged --score Golden.snpA1key 1 2 variance-standardize --
 
 Return **Golden.\${user}.sscore** to central site.
 
-<<<<<<< HEAD
 We adopt one of the plink2.0 formats ".sscore" [plink2.0 formats:.sscore](https://www.cog-genomics.org/plink/2.0/formats#sscore) as a standard sharing format for sharing encrypted genotype data. ".sscore" files include the following contents.
 
 | FID   | IID   | ALLELE_CT | NAMED_ALLELE_DOSAGE_SUM   | SCORE1_AVG | SCORE2_AVG | SCORE3_AVG | \...  |
