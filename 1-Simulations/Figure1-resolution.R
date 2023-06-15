@@ -1,10 +1,9 @@
-## Figure 2 Resolution for varying relatedness using GRM, encGRM and encG-reg
+## Figure 1 Resolution for varying relatedness using GRM, encGRM and encG-reg
 ## encGRMsource.R includes functions:
 ##                RandomMatrixEncryption()
 ##                GenerateGeno()
 ##                GenerateGeno_r()
 
-setwd("~/Desktop/Cryptography/github/1-Simulations/")
 source("encGRMsource.R")
 library(ggplot2)
 library(ggpubr)

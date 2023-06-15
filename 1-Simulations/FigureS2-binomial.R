@@ -7,7 +7,6 @@
 ##                DprimetoD()
 ##                GenerateLDGeno()
 
-setwd("~/Desktop/Cryptography/github/1-Simulations/")
 source("encGRMsource.R")
 library(ggplot2)
 library(ggpubr)
