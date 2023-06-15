@@ -83,7 +83,7 @@ Upon the **\*.frq** files received, central site identifies the shared SNPs acro
 
 #### Step 2.1 QC examination
 
-To examine across-cohort quality control, we used CONVERGE data set as the reference control to reveal any possible mistake made in [Step 1](###Step-1-Within-cohort-quality-controls). This examination includes MAF density plot between CONVERGE and every data set from the collaborators, and plot special shift between major and minor alleles when MAF approaches 0.5.
+To examine across-cohort quality control, we used CONVERGE data set as the reference control to reveal any possible mistake made in [Step 1]. This examination includes MAF density plot between CONVERGE and every data set from the collaborators, and plot special shift between major and minor alleles when MAF approaches 0.5.
 
 #### Step 2.2 Shared SNPs
 
