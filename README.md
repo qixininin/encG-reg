@@ -83,7 +83,7 @@ Upon the **\*.frq** files received, central site identifies the shared SNPs acro
 
 #### Step 2.1 QC examination
 
-To examine across-cohort quality control, we used CONVERGE data set as the reference control to reveal any possible mistake made in [Step 1]. This examination includes MAF density plot between CONVERGE and every data set from the collaborators, and plot special shift between major and minor alleles when MAF approaches 0.5.
+To examine across-cohort quality control, we used CONVERGE data set as the reference control to reveal any possible mistake made in [Step 1](###Step-1-Within-cohort-quality-controls). This examination includes MAF density plot between CONVERGE and every data set from the collaborators, and plot special shift between major and minor alleles when MAF approaches 0.5.
 
 #### Step 2.2 Shared SNPs
 
@@ -171,20 +171,16 @@ plink --bfile 1KG-CHN.extract --bmerge ${user}.extract --make-bed --out Golden.m
 
 Users are asked to encrypt their genotype matrix with the random matrix by plink2.0 and return the encrypted genotype matrix to central site.
 
-Use plink2 "--score" to generate encrypted genotype matrix.
+Use plink2 "--score" to generate encrypted genotype matrix. (variance-standardize: genotypes are scaled by SNP)
 
 ``` shell
 k=`cat Golden.k`
 plink2 --bfile Golden.merged --score Golden.snpA1key 1 2 variance-standardize --score-col-nums 3-$(($k+2)) --out Golden.${user}
 ```
 
-Notes: 
-
-variance-standardize: genotypes are scaled by SNP
-
 Return **Golden.\${user}.sscore** to central site.
 
-We adopt one of the plink2.0 formats ".sscore" [plink2.0 formats:sscore](https://www.cog-genomics.org/plink/2.0/formats#sscore) as a standard sharing format for sharing encrypted genotype data. ".sscore" files include the following contents.
+We adopt one of the plink2.0 formats ".sscore" [plink2.0 formats:sscore](https://www.cog-genomics.org/plink/2.0/formats#sscore) as a standard sharing format for sharing encrypted genotype data. ".sscore" files include the following contents. 
 
 | FID   | IID   | ALLELE_CT | NAMED_ALLELE_DOSAGE_SUM   | SCORE1_AVG | SCORE2_AVG | SCORE3_AVG | \...  |
 |-------|-------|-----------|---------------------------|------------|------------|------------|-------|
@@ -226,6 +222,6 @@ Return **Golden.\${user}.sscore** to central site.
 
 ### Step 4 Perform encG-reg across cohorts
 
-Cohort-wise comparison for overlapping relatives will be conducted by central site. A foolproof implementation in [Step 3.2](####Step-3.2-Merge-with-1KG-CHN) leads to at least 1KG-CHN samples consistently identified as "overlap" between every pair of cohorts in [Step 4](### Step 4 Perform encG-reg across cohorts). Looking forward other possible overlapping that may pop out as expected as unexpected.
+Cohort-wise comparison for overlapping relatives will be conducted by central site. A foolproof implementation in [Step 3.2](####Step-3.2-Merge-with-1KG-CHN) leads to at least 1KG-CHN samples consistently identified as "overlap" between every pair of cohorts in [Step 4](###-Step-4-Perform-encG-reg-across-cohorts). Looking forward other possible overlapping that may pop out as expected as unexpected.
 
 Bingo!
