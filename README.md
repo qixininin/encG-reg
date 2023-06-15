@@ -35,6 +35,7 @@ user=*YOUR_COHORT_ID*
 bfile=*YOUR_PREFIX*
 ```
 
+<<<<<<< HEAD
 Inclusion criteria:
 
 (1) autosome SNPs only;
@@ -42,6 +43,15 @@ Inclusion criteria:
 (2) SNPs with minor allele frequency (MAF) \> 0.05 only;
 
 (3) SNPs with missing rate \< 0.2 only.
+=======
+Inclusion criteria
+
+(1) autosome SNPs only
+
+(2) SNPs with minor allele frequency (MAF) \> 0.05 only
+
+(3) SNPs with missing rate \< 0.2 only
+>>>>>>> a3729660ed56d712bda94006d6c8d2cd87256cfb
 
 Suggested plink command:
 
@@ -105,7 +115,7 @@ This step is similar to generate risk profile score in genetic prediction. Altho
 
 Set environmental variables (!!!!NEED TO BE MODIFIED!!!!)
 
-Again, please replace **YOUR\_ COHORT_ID** with the Cohort ID we provided
+Again, please replace **YOUR_COHORT_ID** with the Cohort ID we provided
 
 ``` shell
 user=*YOUR_COHORT_ID*
@@ -133,6 +143,7 @@ You are supposed to see a matrix like this
 | -0.0123  | 0.0443  | -0.0060 | \... |
 | -0.0159  | -0.0019 | 0.0426  | \... |
 
+
 Combine key with SNPID and A1 alleles by columns.
 
 ``` shell
@@ -140,6 +151,7 @@ paste -d "\t" Golden.snpA1 Golden.key > Golden.snpA1key
 ```
 
 You are supposed to see a data table like this
+<<<<<<< HEAD
 
 | SNP | A1  | K_1     | K_2     | K_3     | \... |
 |-----|-----|---------|---------|---------|------|
@@ -192,6 +204,46 @@ Return **Golden.\${user}.sscore** to server agent.
 +-------+-------+-----------+--------------+------------+------------+------------+-------+
 | FID3  | IID3  | 990       | 273          | -5.005E-04 | 3.104E-05  | -6.440E-04 | \...  |
 +-------+-------+-----------+--------------+------------+------------+------------+-------+
+
+
+|     |     |         |         |         |      |
+|-----|-----|---------|---------|---------|------|
+| SNP | A1  | K_1     | K_2     | K_3     | \... |
+| rs1 | G   | 0.0373  | -0.0250 | 0.0309  | \... |
+| rs2 | A   | -0.0123 | 0.0443  | -0.0060 | \... |
+| rs3 | G   | -0.0159 | -0.0019 | 0.0426  | \... |
+
+#### Step 3.2 Merge with 1KG-CHN (foolproof verification)
+
+First extract SNPs in your bfiles by plink.
+
+``` shell
+awk '{print $1}' Golden.snpA1 > Golden.snp
+plink --bfile ${user} --extract Golden.snp --make-bed --out ${user}.extract
+```
+
+Then merge 1KG-CHN with your bfiles into new plink files named Golden.merged.
+
+These files will be used in Step 3.3 plink2 --score
+
+``` shell
+plink --bfile 1KG-CHN.extract --bmerge ${user}.extract --make-bed --out Golden.merged
+```
+
+#### Step 3.3 Genotype encryption
+
+Users are asked to encrypt their genotype matrix with the same random matrix by plink2.0 and return the encrypted genotype matrix to server agent.
+
+Use plink2 "--score" to generate encrypted genotype matrix.
+
+``` shell
+k=`cat Golden.k`
+plink2 --bfile Golden.merged --score Golden.snpA1key 1 2 variance-standardize --score-col-nums 3-$(($k+2)) --out Golden.${user}
+```
+
+(variance-standardize: genotypes are scaled by SNP)
+
+Return **Golden.\${user}.sscore** to server agent.
 
 ### Step 4 Perform encG-reg across cohorts
 
