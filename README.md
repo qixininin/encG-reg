@@ -35,23 +35,13 @@ user=*YOUR_COHORT_ID*
 bfile=*YOUR_PREFIX*
 ```
 
-<<<<<<< HEAD
 Inclusion criteria:
 
-(1) autosome SNPs only;
+(1) Autosome SNPs only;
 
 (2) SNPs with minor allele frequency (MAF) \> 0.05 only;
 
 (3) SNPs with missing rate \< 0.2 only.
-=======
-Inclusion criteria
-
-(1) autosome SNPs only
-
-(2) SNPs with minor allele frequency (MAF) \> 0.05 only
-
-(3) SNPs with missing rate \< 0.2 only
->>>>>>> a3729660ed56d712bda94006d6c8d2cd87256cfb
 
 Suggested plink command:
 
@@ -62,7 +52,7 @@ plink --bfile ${user} --freq --out ${user}
 
 [plink1.9 formats:.frq](https://www.cog-genomics.org/plink/1.9/formats#frq)
 
-| Header  | Contents                     |
+| Header  | Contents                      |
 |---------|-------------------------------|
 | CHR     | Chromosome code               |
 | SNP     | Variant identifier            |
@@ -139,10 +129,10 @@ Rscript GenerateRandMat.R Golden
 
 You are supposed to see a matrix like this
 
+|          |         |         |      |
 | 0.0373   | -0.0250 | 0.0309  | \... |
 | -0.0123  | 0.0443  | -0.0060 | \... |
 | -0.0159  | -0.0019 | 0.0426  | \... |
-
 
 Combine key with SNPID and A1 alleles by columns.
 
@@ -150,8 +140,7 @@ Combine key with SNPID and A1 alleles by columns.
 paste -d "\t" Golden.snpA1 Golden.key > Golden.snpA1key
 ```
 
-You are supposed to see a data table like this
-<<<<<<< HEAD
+You are supposed to see a data table like this 
 
 | SNP | A1  | K_1     | K_2     | K_3     | \... |
 |-----|-----|---------|---------|---------|------|
@@ -205,13 +194,6 @@ Return **Golden.\${user}.sscore** to server agent.
 | FID3  | IID3  | 990       | 273          | -5.005E-04 | 3.104E-05  | -6.440E-04 | \...  |
 +-------+-------+-----------+--------------+------------+------------+------------+-------+
 
-
-|     |     |         |         |         |      |
-|-----|-----|---------|---------|---------|------|
-| SNP | A1  | K_1     | K_2     | K_3     | \... |
-| rs1 | G   | 0.0373  | -0.0250 | 0.0309  | \... |
-| rs2 | A   | -0.0123 | 0.0443  | -0.0060 | \... |
-| rs3 | G   | -0.0159 | -0.0019 | 0.0426  | \... |
 
 #### Step 3.2 Merge with 1KG-CHN (foolproof verification)
 
