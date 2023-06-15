@@ -175,13 +175,14 @@ plink2 --bfile Golden.merged --score Golden.snpA1key 1 2 variance-standardize --
 
 Return **Golden.\${user}.sscore** to central site.
 
+<<<<<<< HEAD
 We adopt one of the plink2.0 formats ".sscore" [plink2.0 formats:.sscore](https://www.cog-genomics.org/plink/2.0/formats#sscore) as a standard sharing format for sharing encrypted genotype data. ".sscore" files include the following contents.
 
-| FID  | IID  | ALLELE_CT | NAMED_ALLELE_DOSAGE_SUM | SCORE1_AVG | SCORE2_AVG | SCORE3_AVG | \... |
-|---------|---------|---------|---------|---------|---------|---------|---------|
-| FID1 | IID1 | 996       | 273                     | -4.151E-04 | 5.563E-04  | -3.861E-04 | \... |
-| FID2 | IID2 | 970       | 267                     | -8.676E-05 | 1.800E-04  | 1.612E-03  | \... |
-| FID3 | IID3 | 990       | 273                     | -5.005E-04 | 3.104E-05  | -6.440E-04 | \... |
+| FID   | IID   | ALLELE_CT | NAMED_ALLELE_DOSAGE_SUM   | SCORE1_AVG | SCORE2_AVG | SCORE3_AVG | \...  |
+|-------|-------|-----------|---------------------------|------------|------------|------------|-------|
+| FID1  | IID1  | 996       | 273                       | -4.151E-04 | 5.563E-04  | -3.861E-04 | \...  |
+| FID2  | IID2  | 970       | 267                       | -8.676E-05 | 1.800E-04  | 1.612E-03  | \...  |
+| FID3  | IID3  | 990       | 273                       | -5.005E-04 | 3.104E-05  | -6.440E-04 | \...  |
 
 #### Step 3.2 Merge with 1KG-CHN (foolproof verification)
 
