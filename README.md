@@ -225,3 +225,7 @@ Return **Golden.\${user}.sscore** to central site.
 Cohort-wise comparison for overlapping relatives will be conducted by central site. A foolproof implementation in [Step 3.2](####Step-3.2-Merge-with-1KG-CHN) leads to at least 1KG-CHN samples consistently identified as "overlap" between every pair of cohorts in [Step 4](###-Step-4-Perform-encG-reg-across-cohorts). Looking forward other possible overlapping that may pop out as expected as unexpected.
 
 Bingo!
+
+## Citations
+Zhang Q-X, Liu T, Guo X, Zhen J, Yang M- y, Khederzadeh S, et al. (2024) Searching across- cohort relatives in 54,092 GWAS samples via encrypted genotype regression. PLoS Genet 20(1): e1011037. https://doi.org/10.1371/journal.pgen.1011037    
+
