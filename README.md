@@ -227,5 +227,5 @@ Cohort-wise comparison for overlapping relatives will be conducted by central si
 Bingo!
 
 ## Citations
-Zhang Q-X, Liu T, Guo X, Zhen J, Yang M- y, Khederzadeh S, et al. (2024) Searching across- cohort relatives in 54,092 GWAS samples via encrypted genotype regression. PLoS Genet 20(1): e1011037. https://doi.org/10.1371/journal.pgen.1011037    
+Zhang Q-X, Liu T, Guo X, Zhen J, Yang M-y, Khederzadeh S, et al. (2024) Searching across-cohort relatives in 54,092 GWAS samples via encrypted genotype regression. PLoS Genet 20(1):e1011037. https://doi.org/10.1371/journal.pgen.1011037    
 
